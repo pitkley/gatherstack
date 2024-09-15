@@ -1,5 +1,5 @@
 # Install p4 CLI (keep this up to date with cmd/gitserver/Dockerfile)
-FROM sourcegraph/alpine-3.14:213466_2023-04-17_5.0-bdda34a71619@sha256:6354a4ff578b685e36c8fbde81f62125ae0011b047fb2cc22d1b0de616b3c59a AS p4cli
+FROM sourcegraph/alpine-3.14:server AS p4cli
 
 # hash provided in http://filehost.perforce.com/perforce/r22.2/bin.linux26x86_64/SHA256SUMS
 # if the hash is not provided, calculate it by downloading the file and running `sha256sum` on it in Terminal
@@ -9,20 +9,20 @@ RUN echo "0f608f128277cae3275e14a85729d038efeea39a2e91ccda12b2f8cd697f1fe4  /usr
     sha256sum -c expected_hash
 
 # Install p4-fusion (keep this up to date with cmd/gitserver/Dockerfile)
-FROM sourcegraph/alpine-3.14:213466_2023-04-17_5.0-bdda34a71619@sha256:6354a4ff578b685e36c8fbde81f62125ae0011b047fb2cc22d1b0de616b3c59a AS p4-fusion
+FROM sourcegraph/alpine-3.14:server AS p4-fusion
 
 COPY p4-fusion-install-alpine.sh /p4-fusion-install-alpine.sh
 RUN /p4-fusion-install-alpine.sh
 
 # Install coursier (keep this up to date with cmd/gitserver/Dockerfile)
-FROM sourcegraph/alpine-3.14:213466_2023-04-17_5.0-bdda34a71619@sha256:6354a4ff578b685e36c8fbde81f62125ae0011b047fb2cc22d1b0de616b3c59a AS coursier
+FROM sourcegraph/alpine-3.14:server AS coursier
 
 RUN wget -O coursier.gz https://github.com/coursier/coursier/releases/download/v2.1.0-RC4/cs-x86_64-pc-linux-static.gz && \
     gzip -d coursier.gz && \
     mv coursier /usr/local/bin/coursier && \
     chmod +x /usr/local/bin/coursier
 
-FROM sourcegraph/alpine-3.14:213466_2023-04-17_5.0-bdda34a71619@sha256:6354a4ff578b685e36c8fbde81f62125ae0011b047fb2cc22d1b0de616b3c59a
+FROM sourcegraph/alpine-3.14:server
 # TODO(security): This container should not be running as root!
 #
 # The default user in sourcegraph/alpine is a non-root `sourcegraph` user but because old deployments

@@ -4,7 +4,7 @@
 # ignores.
 
 # Install p4 CLI (keep this up to date with cmd/server/Dockerfile)
-FROM sourcegraph/alpine-3.14:213466_2023-04-17_5.0-bdda34a71619@sha256:6354a4ff578b685e36c8fbde81f62125ae0011b047fb2cc22d1b0de616b3c59a AS build
+FROM sourcegraph/alpine-3.14:server AS build
 
 # hash provided in http://filehost.perforce.com/perforce/r22.2/bin.linux26x86_64/SHA256SUMS
 # if the hash is not provided, calculate it by downloading the file and running `sha256sum` on it in Terminal
@@ -21,7 +21,7 @@ RUN wget -O coursier.gz https://github.com/coursier/coursier/releases/download/v
     mv coursier /usr/local/bin/coursier && \
     chmod +x /usr/local/bin/coursier
 
-FROM sourcegraph/alpine-3.14:213466_2023-04-17_5.0-bdda34a71619@sha256:6354a4ff578b685e36c8fbde81f62125ae0011b047fb2cc22d1b0de616b3c59a
+FROM sourcegraph/alpine-3.14:server
 
 ARG COMMIT_SHA="unknown"
 ARG DATE="unknown"

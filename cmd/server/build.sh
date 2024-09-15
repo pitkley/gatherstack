@@ -84,6 +84,9 @@ else
   pushd monitoring && go generate && popd
 fi
 
+echo "--- alpine-3.14"
+IMAGE=sourcegraph/alpine-3.14:server docker-images/alpine-3.14/build.sh
+
 echo "--- prometheus"
 cp -r docker-images/prometheus/config "$OUTPUT/sg_config_prometheus"
 mkdir "$OUTPUT/sg_prometheus_add_ons"

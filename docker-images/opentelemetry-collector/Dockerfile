@@ -22,7 +22,7 @@ RUN go run go.opentelemetry.io/collector/cmd/builder@v${OTEL_COLLECTOR_VERSION} 
     --output-path=/cmd/otelcol-sourcegraph
 
 # Package the final distribution image
-FROM sourcegraph/alpine-3.14:213466_2023-04-17_5.0-bdda34a71619@sha256:6354a4ff578b685e36c8fbde81f62125ae0011b047fb2cc22d1b0de616b3c59a
+FROM sourcegraph/alpine-3.14:server
 
 ARG COMMIT_SHA="unknown"
 ARG DATE="unknown"
