@@ -74,6 +74,7 @@ RUN apk add --no-cache --verbose \
 COPY --from=comby/comby:alpine-3.14-1.8.1@sha256:a5e80d6bad6af008478679809dc8327ebde7aeff7b23505b11b20e36aa62a0b2 /usr/local/bin/comby /usr/local/bin/comby
 # hadolint ignore=DL3022
 COPY --from=sourcegraph/syntax-highlighter:server /syntax_highlighter /usr/local/bin/
+COPY --from=sourcegraph/syntax-highlighter:server /scip-ctags /usr/local/bin/
 
 
 # install blobstore (keep this up to date with the upstream Docker image

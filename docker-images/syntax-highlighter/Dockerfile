@@ -29,6 +29,7 @@ RUN cargo rustc --release
 RUN ls ./target
 
 RUN cp ./target/release/syntect_server /syntax_highlighter
+RUN cp ./target/release/scip-ctags /scip-ctags
 
 ################################
 # Build http-server-stabilizer #
@@ -46,6 +47,7 @@ RUN go build -o /http-server-stabilizer .
 FROM sourcegraph/alpine-3.14:server
 COPY --from=ss syntax_highlighter /
 COPY --from=hss http-server-stabilizer /
+COPY --from=ss scip-ctags /
 
 # even with everything, we can't get this to statically link
 RUN apk add --no-cache libstdc++
