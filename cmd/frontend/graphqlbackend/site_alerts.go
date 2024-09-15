@@ -3,7 +3,6 @@ package graphqlbackend
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -11,18 +10,15 @@ import (
 	"github.com/inconshreveable/log15"
 
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/hooks"
-	"github.com/sourcegraph/sourcegraph/cmd/frontend/internal/app/updatecheck"
 	"github.com/sourcegraph/sourcegraph/internal/actor"
 	"github.com/sourcegraph/sourcegraph/internal/auth"
 	"github.com/sourcegraph/sourcegraph/internal/conf"
 	"github.com/sourcegraph/sourcegraph/internal/conf/conftypes"
 	"github.com/sourcegraph/sourcegraph/internal/conf/deploy"
-	"github.com/sourcegraph/sourcegraph/internal/env"
 	"github.com/sourcegraph/sourcegraph/internal/extsvc"
 	"github.com/sourcegraph/sourcegraph/internal/extsvc/versions"
 	"github.com/sourcegraph/sourcegraph/internal/settings"
 	srcprometheus "github.com/sourcegraph/sourcegraph/internal/src-prometheus"
-	"github.com/sourcegraph/sourcegraph/internal/version"
 	"github.com/sourcegraph/sourcegraph/lib/errors"
 	"github.com/sourcegraph/sourcegraph/schema"
 )
@@ -84,11 +80,6 @@ func (r *siteResolver) Alerts(ctx context.Context) ([]*Alert, error) {
 	return alerts, nil
 }
 
-// Intentionally named "DISABLE_SECURITY" and not something else, so that anyone considering
-// disabling this thinks twice about the risks associated with disabling these and considers
-// keeping up-to-date more frequently instead.
-var disableSecurity, _ = strconv.ParseBool(env.Get("DISABLE_SECURITY", "false", "disables security upgrade notices"))
-
 func init() {
 	conf.ContributeWarning(func(c conftypes.SiteConfigQuerier) (problems conf.Problems) {
 		if deploy.IsDeployTypeSingleDockerContainer(deploy.Type()) || deploy.IsApp() {
@@ -102,16 +93,6 @@ func init() {
 
 	// Warn if email sending is not configured.
 	AlertFuncs = append(AlertFuncs, emailSendingNotConfiguredAlert)
-
-	if !disableSecurity {
-		// Warn about Sourcegraph being out of date.
-		AlertFuncs = append(AlertFuncs, outOfDateAlert)
-	} else {
-		log15.Warn("WARNING: SECURITY NOTICES DISABLED: this is not recommended, please unset DISABLE_SECURITY=true")
-	}
-
-	// Notify when updates are available, if the instance can access the public internet.
-	AlertFuncs = append(AlertFuncs, updateAvailableAlert)
 
 	AlertFuncs = append(AlertFuncs, storageLimitReachedAlert)
 
@@ -214,55 +195,6 @@ func storageLimitReachedAlert(args AlertFuncArgs) []*Alert {
 	return nil
 }
 
-func updateAvailableAlert(args AlertFuncArgs) []*Alert {
-	// TODO(app): App Update Messaging
-	// See: https://github.com/sourcegraph/sourcegraph/issues/48851
-	if deploy.IsApp() {
-		return nil
-	}
-
-	// We only show update alerts to admins. This is not for security reasons, as we already
-	// expose the version number of the instance to all users via the user settings page.
-	if !args.IsSiteAdmin {
-		return nil
-	}
-
-	globalUpdateStatus := updatecheck.Last()
-	if globalUpdateStatus == nil || updatecheck.IsPending() || !globalUpdateStatus.HasUpdate() || globalUpdateStatus.Err != nil {
-		return nil
-	}
-	// ensure the user has opted in to receiving notifications for minor updates and there is one available
-	if !args.ViewerFinalSettings.AlertsShowPatchUpdates && !isMinorUpdateAvailable(version.Version(), globalUpdateStatus.UpdateVersion) {
-		return nil
-	}
-	// for major/minor updates, ensure banner is hidden if they have opted out
-	if !args.ViewerFinalSettings.AlertsShowMajorMinorUpdates && isMinorUpdateAvailable(version.Version(), globalUpdateStatus.UpdateVersion) {
-		return nil
-	}
-	message := fmt.Sprintf("An update is available: [Sourcegraph v%s](https://about.sourcegraph.com/blog) - [changelog](https://about.sourcegraph.com/changelog)", globalUpdateStatus.UpdateVersion)
-
-	// dismission key includes the version so after it is dismissed the alert comes back for the next update.
-	key := "update-available-" + globalUpdateStatus.UpdateVersion
-	return []*Alert{{TypeValue: AlertTypeInfo, MessageValue: message, IsDismissibleWithKeyValue: key}}
-}
-
-// isMinorUpdateAvailable tells if upgrading from the current version to the specified upgrade
-// candidate would be a major/minor update and NOT a patch update.
-func isMinorUpdateAvailable(currentVersion, updateVersion string) bool {
-	// If either current or update versions aren't semvers (e.g., a user is on a date-based build version, or "dev"),
-	// always return true and allow any alerts to be shown. This has the effect of simply deferring to the response
-	// from Sourcegraph.com about whether an update alert is needed.
-	cv, err := semver.NewVersion(currentVersion)
-	if err != nil {
-		return true
-	}
-	uv, err := semver.NewVersion(updateVersion)
-	if err != nil {
-		return true
-	}
-	return cv.Major() != uv.Major() || cv.Minor() != uv.Minor()
-}
-
 func emailSendingNotConfiguredAlert(args AlertFuncArgs) []*Alert {
 	if !args.IsSiteAdmin || deploy.IsDeployTypeSingleDockerContainer(deploy.Type()) || deploy.IsApp() {
 		return nil
@@ -282,78 +214,6 @@ func emailSendingNotConfiguredAlert(args AlertFuncArgs) []*Alert {
 		}}
 	}
 	return nil
-}
-
-func outOfDateAlert(args AlertFuncArgs) []*Alert {
-	// TODO(app): App Update Messaging
-	// See: https://github.com/sourcegraph/sourcegraph/issues/48851
-	if deploy.IsApp() {
-		return nil
-	}
-
-	globalUpdateStatus := updatecheck.Last()
-	if globalUpdateStatus == nil || updatecheck.IsPending() {
-		return nil
-	}
-	offline := globalUpdateStatus.Err != nil // Whether or not instance can connect to Sourcegraph.com for update checks
-	now := time.Now()
-	monthsOutOfDate, err := version.HowLongOutOfDate(now)
-	if err != nil {
-		log15.Error("failed to determine how out of date Sourcegraph is", "error", err)
-		return nil
-	}
-	alert := determineOutOfDateAlert(args.IsSiteAdmin, monthsOutOfDate, offline)
-	if alert == nil {
-		return nil
-	}
-	return []*Alert{alert}
-}
-
-func determineOutOfDateAlert(isAdmin bool, months int, offline bool) *Alert {
-	if months <= 0 {
-		return nil
-	}
-	// online instances will still be prompt site admins to upgrade via site_update_check
-	if months < 3 && !offline {
-		return nil
-	}
-
-	if isAdmin {
-		key := fmt.Sprintf("months-out-of-date-%d", months)
-		switch {
-		case months < 3:
-			message := fmt.Sprintf("Sourcegraph is %d+ months out of date, for the latest features and bug fixes please upgrade ([changelog](http://about.sourcegraph.com/changelog))", months)
-			return &Alert{TypeValue: AlertTypeInfo, MessageValue: message, IsDismissibleWithKeyValue: key}
-		case months == 3:
-			message := "Sourcegraph is 3+ months out of date, you may be missing important security or bug fixes. Users will be notified at 4+ months. ([changelog](http://about.sourcegraph.com/changelog))"
-			return &Alert{TypeValue: AlertTypeWarning, MessageValue: message}
-		case months == 4:
-			message := "Sourcegraph is 4+ months out of date, you may be missing important security or bug fixes. A notice is shown to users. ([changelog](http://about.sourcegraph.com/changelog))"
-			return &Alert{TypeValue: AlertTypeWarning, MessageValue: message}
-		case months == 5:
-			message := "Sourcegraph is 5+ months out of date, you may be missing important security or bug fixes. A notice is shown to users. ([changelog](http://about.sourcegraph.com/changelog))"
-			return &Alert{TypeValue: AlertTypeError, MessageValue: message}
-		default:
-			message := fmt.Sprintf("Sourcegraph is %d+ months out of date, you may be missing important security or bug fixes. A notice is shown to users. ([changelog](http://about.sourcegraph.com/changelog))", months)
-			return &Alert{TypeValue: AlertTypeError, MessageValue: message}
-		}
-	}
-
-	key := fmt.Sprintf("months-out-of-date-%d", months)
-	switch months {
-	case 0, 1, 2, 3:
-		return nil
-	case 4, 5:
-		message := fmt.Sprintf("Sourcegraph is %d+ months out of date, ask your site administrator to upgrade for the latest features and bug fixes. ([changelog](http://about.sourcegraph.com/changelog))", months)
-		return &Alert{TypeValue: AlertTypeWarning, MessageValue: message, IsDismissibleWithKeyValue: key}
-	default:
-		alertType := AlertTypeWarning
-		if months > 12 {
-			alertType = AlertTypeError
-		}
-		message := fmt.Sprintf("Sourcegraph is %d+ months out of date, you may be missing important security or bug fixes. Ask your site administrator to upgrade. ([changelog](http://about.sourcegraph.com/changelog))", months)
-		return &Alert{TypeValue: alertType, MessageValue: message, IsDismissibleWithKeyValue: key}
-	}
 }
 
 // observabilityActiveAlertsAlert directs admins to check Grafana if critical alerts are firing

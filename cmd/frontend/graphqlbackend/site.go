@@ -16,7 +16,6 @@ import (
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/backend"
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/envvar"
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/graphqlbackend/graphqlutil"
-	"github.com/sourcegraph/sourcegraph/cmd/frontend/internal/app/updatecheck"
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/internal/siteid"
 	migratorshared "github.com/sourcegraph/sourcegraph/cmd/migrator/shared"
 	"github.com/sourcegraph/sourcegraph/internal/actor"
@@ -475,30 +474,7 @@ func isRequiredOutOfBandMigration(version oobmigration.Version, m oobmigration.M
 }
 
 func (r *upgradeReadinessResolver) RequiredOutOfBandMigrations(ctx context.Context) ([]*outOfBandMigrationResolver, error) {
-	updateStatus := updatecheck.Last()
-	if updateStatus == nil {
-		return nil, errors.New("no latest update version available (reload in a few seconds)")
-	}
-	if !updateStatus.HasUpdate() {
-		return nil, nil
-	}
-	version, _, ok := oobmigration.NewVersionAndPatchFromString(updateStatus.UpdateVersion)
-	if !ok {
-		return nil, errors.Errorf("invalid latest update version %q", updateStatus.UpdateVersion)
-	}
-
-	migrations, err := oobmigration.NewStoreWithDB(r.db).List(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	var requiredMigrations []*outOfBandMigrationResolver
-	for _, m := range migrations {
-		if isRequiredOutOfBandMigration(version, m) {
-			requiredMigrations = append(requiredMigrations, &outOfBandMigrationResolver{m})
-		}
-	}
-	return requiredMigrations, nil
+	return nil, nil
 }
 
 // Return the enablement of auto upgrades

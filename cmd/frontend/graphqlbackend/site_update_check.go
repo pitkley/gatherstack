@@ -5,25 +5,15 @@ import (
 	"time"
 
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/internal/app/updatecheck"
-	"github.com/sourcegraph/sourcegraph/internal/auth"
 	"github.com/sourcegraph/sourcegraph/internal/gqlutil"
 )
 
-func (r *siteResolver) UpdateCheck(ctx context.Context) (*updateCheckResolver, error) {
-	// 🚨 SECURITY: Only site admins can check for updates.
-	if err := auth.CheckCurrentUserIsSiteAdmin(ctx, r.db); err != nil {
-		// TODO(dax): This should return err once the site flags query is fixed for users
-		return &updateCheckResolver{
-			last: &updatecheck.Status{
-				Date:          time.Time{},
-				Err:           err,
-				UpdateVersion: "",
-			},
-		}, nil
-	}
+func (r *siteResolver) UpdateCheck(_ context.Context) (*updateCheckResolver, error) {
 	return &updateCheckResolver{
-		last:    updatecheck.Last(),
-		pending: updatecheck.IsPending(),
+		last: &updatecheck.Status{
+			Date:          time.Time{},
+			UpdateVersion: "",
+		},
 	}, nil
 }
 
@@ -50,8 +40,5 @@ func (r *updateCheckResolver) ErrorMessage() *string {
 }
 
 func (r *updateCheckResolver) UpdateVersionAvailable() *string {
-	if r.last == nil || !r.last.HasUpdate() {
-		return nil
-	}
-	return &r.last.UpdateVersion
+	return nil
 }
