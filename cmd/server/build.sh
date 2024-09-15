@@ -96,6 +96,7 @@ cp -r dev/grafana/linux "$OUTPUT/sg_config_grafana/provisioning/datasources"
 IMAGE=sourcegraph/grafana:server CACHE=true docker-images/grafana/build-alpine.sh
 
 echo "--- postgres exporter"
+cp cmd/server/postgres_exporter.yaml "$OUTPUT/postgres_exporter.yaml"
 IMAGE=sourcegraph/postgres_exporter:server CACHE=true docker-images/postgres_exporter/build.sh
 
 echo "--- blobstore"
