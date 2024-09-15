@@ -105,6 +105,9 @@ IMAGE=sourcegraph/postgres_exporter:server CACHE=true docker-images/postgres_exp
 echo "--- blobstore"
 IMAGE=sourcegraph/blobstore:server docker-images/blobstore/build.sh
 
+echo "--- syntax-highlighter"
+IMAGE=sourcegraph/syntax-highlighter:server docker-images/syntax-highlighter/build.sh
+
 echo "--- docker build"
 docker build -f cmd/server/Dockerfile -t "$IMAGE" "$OUTPUT" \
   --progress=plain \
