@@ -7,7 +7,6 @@ import (
 	"github.com/graph-gophers/graphql-go"
 
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/graphqlbackend/graphqlutil"
-	"github.com/sourcegraph/sourcegraph/enterprise/cmd/worker/shared/sourcegraphoperator"
 	"github.com/sourcegraph/sourcegraph/internal/actor"
 	"github.com/sourcegraph/sourcegraph/internal/auth"
 	"github.com/sourcegraph/sourcegraph/internal/authz/permssync"
@@ -172,10 +171,7 @@ func (r *schemaResolver) AddExternalAccount(ctx context.Context, args *struct {
 		}
 
 	case auth.SourcegraphOperatorProviderType:
-		err := sourcegraphoperator.AddSourcegraphOperatorExternalAccount(ctx, r.db, a.UID, args.ServiceID, args.AccountDetails)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to add Sourcegraph Operator external account")
-		}
+		return nil, errors.Newf("Enterprise code is not available, can't use %q", args.ServiceType)
 
 	default:
 		return nil, errors.Newf("unsupported service type %q", args.ServiceType)
