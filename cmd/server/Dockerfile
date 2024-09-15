@@ -3,8 +3,8 @@ FROM sourcegraph/alpine-3.14:213466_2023-04-17_5.0-bdda34a71619@sha256:6354a4ff5
 
 # hash provided in http://filehost.perforce.com/perforce/r22.2/bin.linux26x86_64/SHA256SUMS
 # if the hash is not provided, calculate it by downloading the file and running `sha256sum` on it in Terminal
-RUN echo "8bc10fca1c5a26262b4072deec76150a668581a9749d0504cd443084773d4fd0  /usr/local/bin/p4" >expected_hash && \
-    wget http://cdist2.perforce.com/perforce/r22.2/bin.linux26x86_64/p4 -O /usr/local/bin/p4 && \
+RUN echo "0f608f128277cae3275e14a85729d038efeea39a2e91ccda12b2f8cd697f1fe4  /usr/local/bin/p4" >expected_hash && \
+    wget https://cdist2.perforce.com/perforce/r22.2/bin.linux26x86_64/p4 -O /usr/local/bin/p4 && \
     chmod +x /usr/local/bin/p4 && \
     sha256sum -c expected_hash
 
