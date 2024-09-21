@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source width="50%" media="(prefers-color-scheme: dark)" srcset="ui/assets/img/sourcegraph-logo-dark.svg">
+    <img width="50%" alt="Gatherstack logo" src="ui/assets/img/sourcegraph-logo-light.svg">
+  </picture>
+</p>
+
 # Gatherstack &ndash; a libre, OSS fork of [Sourcegraph](https://sourcegraph.com).
 
 Search all of your repositories across all branches and all code hosts.

@@ -53,7 +53,7 @@ export const BrandLogo: FC<BrandLogoProps> = props => {
                 [styles.brandLogoSpin]: variant === 'symbol' && !branding?.disableSymbolSpin,
             })}
             src={customBrandingLogoUrl || sourcegraphLogoUrl}
-            alt={customBrandingLogoUrl ? 'Logo' : 'Sourcegraph logo'}
+            alt={customBrandingLogoUrl ? 'Logo' : 'Gatherstack logo'}
         />
     )
 }
