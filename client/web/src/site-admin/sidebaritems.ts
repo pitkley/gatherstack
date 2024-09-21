@@ -146,11 +146,6 @@ export const maintenanceGroup: SiteAdminSideBarGroup = {
             condition: ({ isSourcegraphApp }) => !isSourcegraphApp,
         },
         {
-            label: 'Pings',
-            to: '/site-admin/pings',
-            condition: ({ isSourcegraphApp }) => !isSourcegraphApp,
-        },
-        {
             label: 'Report a bug',
             to: '/site-admin/report-bug',
             condition: ({ isSourcegraphApp }) => !isSourcegraphApp,
