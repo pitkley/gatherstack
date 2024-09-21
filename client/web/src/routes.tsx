@@ -30,7 +30,6 @@ const OrgsArea = lazyComponent(() => import('./org/OrgsArea'), 'OrgsArea')
 const ResetPasswordPage = lazyComponent(() => import('./auth/ResetPasswordPage'), 'ResetPasswordPage')
 const ApiConsole = lazyComponent(() => import('./api/ApiConsole'), 'ApiConsole')
 const UserArea = lazyComponent(() => import('./user/area/UserArea'), 'UserArea')
-const SurveyPage = lazyComponent(() => import('./marketing/page/SurveyPage'), 'SurveyPage')
 const RepoContainer = lazyComponent(() => import('./repo/RepoContainer'), 'RepoContainer')
 const TeamsArea = lazyComponent(() => import('./team/TeamsArea'), 'TeamsArea')
 const CodySidebarStoreProvider = lazyComponent(() => import('./cody/sidebar/Provider'), 'CodySidebarStoreProvider')
@@ -133,10 +132,6 @@ export const routes: RouteObject[] = [
     {
         path: PageRoutes.UserArea,
         element: <LegacyRoute render={props => <UserArea {...props} />} />,
-    },
-    {
-        path: PageRoutes.Survey,
-        element: <LegacyRoute render={props => <SurveyPage {...props} />} />,
     },
     {
         path: PageRoutes.Help,

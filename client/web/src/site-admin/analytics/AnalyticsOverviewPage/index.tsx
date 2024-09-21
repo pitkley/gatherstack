@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 
-import { mdiAccount, mdiCommentOutline, mdiSourceRepository } from '@mdi/js'
+import { mdiAccount, mdiSourceRepository } from '@mdi/js'
 import classNames from 'classnames'
 import format from 'date-fns/format'
 
@@ -164,25 +164,6 @@ export const AnalyticsOverviewPage: React.FunctionComponent<Props> = () => {
                                         {
                                             label: 'Lines of code',
                                             value: Number(data.repositoryStats.indexedLinesCount),
-                                        },
-                                    ],
-                                },
-                                {
-                                    title: 'Feedback',
-                                    icon: mdiCommentOutline,
-                                    link: '/site-admin/surveys',
-                                    items: [
-                                        {
-                                            label: 'Submissions',
-                                            value: data.surveyResponses.totalCount,
-                                        },
-                                        {
-                                            label: 'Avg score',
-                                            value: data.surveyResponses.averageScore,
-                                        },
-                                        {
-                                            label: 'NPS',
-                                            value: data.surveyResponses.netPromoterScore,
                                         },
                                     ],
                                 },

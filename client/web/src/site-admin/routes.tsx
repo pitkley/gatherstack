@@ -52,10 +52,6 @@ const SiteAdminTokensPage = lazyComponent(() => import('./SiteAdminTokensPage'),
 const SiteAdminUpdatesPage = lazyComponent(() => import('./SiteAdminUpdatesPage'), 'SiteAdminUpdatesPage')
 const SiteAdminPingsPage = lazyComponent(() => import('./SiteAdminPingsPage'), 'SiteAdminPingsPage')
 const SiteAdminReportBugPage = lazyComponent(() => import('./SiteAdminReportBugPage'), 'SiteAdminReportBugPage')
-const SiteAdminSurveyResponsesPage = lazyComponent(
-    () => import('./SiteAdminSurveyResponsesPage'),
-    'SiteAdminSurveyResponsesPage'
-)
 const SiteAdminMigrationsPage = lazyComponent(() => import('./SiteAdminMigrationsPage'), 'SiteAdminMigrationsPage')
 const SiteAdminOutboundRequestsPage = lazyComponent(
     () => import('./SiteAdminOutboundRequestsPage'),
@@ -176,10 +172,6 @@ export const otherSiteAdminRoutes: readonly SiteAdminAreaRoute[] = [
     {
         path: '/report-bug',
         render: props => <SiteAdminReportBugPage {...props} />,
-    },
-    {
-        path: '/surveys',
-        render: props => <SiteAdminSurveyResponsesPage {...props} />,
     },
     {
         path: '/migrations',

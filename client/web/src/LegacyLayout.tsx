@@ -23,7 +23,6 @@ import { useFeatureFlag } from './featureFlags/useFeatureFlag'
 import { GlobalAlerts } from './global/GlobalAlerts'
 import { useHandleSubmitFeedback } from './hooks'
 import { LegacyLayoutRouteContext } from './LegacyRouteContext'
-import { CodySurveyToast, SurveyToast } from './marketing/toast'
 import { GlobalNavbar } from './nav/GlobalNavbar'
 import { EnterprisePageRoutes, PageRoutes } from './routes.constants'
 import { parseSearchURLQuery } from './search'
@@ -94,7 +93,6 @@ export const LegacyLayout: FC<LegacyLayoutProps> = props => {
     // TODO add a component layer as the parent of the Layout component rendering "top-level" routes that do not render the navbar,
     // so that Layout can always render the navbar.
     const needsSiteInit = window.context?.needsSiteInit
-    const disableFeedbackSurvey = window.context?.disableFeedbackSurvey
     const isSiteInit = location.pathname === PageRoutes.SiteAdminInit
     const isSignInOrUp =
         routeMatch &&
@@ -227,15 +225,6 @@ export const LegacyLayout: FC<LegacyLayoutProps> = props => {
             )}
 
             <GlobalAlerts authenticatedUser={props.authenticatedUser} isSourcegraphApp={props.isSourcegraphApp} />
-            {!isSiteInit && !isSignInOrUp && !props.isSourcegraphDotCom && !disableFeedbackSurvey && (
-                <SurveyToast authenticatedUser={props.authenticatedUser} />
-            )}
-            {props.isSourcegraphDotCom && props.authenticatedUser && (
-                <CodySurveyToast
-                    authenticatedUser={props.authenticatedUser}
-                    telemetryService={props.telemetryService}
-                />
-            )}
             {!isSiteInit && !isSignInOrUp && (
                 <GlobalNavbar
                     {...props}
