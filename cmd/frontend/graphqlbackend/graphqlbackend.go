@@ -442,163 +442,39 @@ func NewSchema(
 		}
 	}
 
-	if codeIntel := optional.CodeIntelResolver; codeIntel != nil {
-		EnterpriseResolvers.codeIntelResolver = codeIntel
-		resolver.CodeIntelResolver = codeIntel
-
-		entires, err := codeIntelSchema.ReadDir(".")
+	// FIXME(LIBRE): identify if we can avoid loading this effectively unsupported schema, and have
+	//               the call-sites just not use it.
+	entires, err := codeIntelSchema.ReadDir(".")
+	if err != nil {
+		return nil, err
+	}
+	for _, entry := range entires {
+		content, err := codeIntelSchema.ReadFile(entry.Name())
 		if err != nil {
 			return nil, err
 		}
-		for _, entry := range entires {
-			content, err := codeIntelSchema.ReadFile(entry.Name())
-			if err != nil {
-				return nil, err
-			}
 
-			schemas = append(schemas, string(content))
-		}
-
-		// Register NodeByID handlers.
-		for kind, res := range codeIntel.NodeResolvers() {
-			resolver.nodeByIDFns[kind] = res
-		}
+		schemas = append(schemas, string(content))
 	}
 
-	if insights := optional.InsightsResolver; insights != nil {
-		EnterpriseResolvers.insightsResolver = insights
-		resolver.InsightsResolver = insights
-		schemas = append(schemas, insightsSchema)
-	}
-
-	if authz := optional.AuthzResolver; authz != nil {
-		EnterpriseResolvers.authzResolver = authz
-		resolver.AuthzResolver = authz
-		schemas = append(schemas, authzSchema)
-	}
-
-	if codeMonitors := optional.CodeMonitorsResolver; codeMonitors != nil {
-		EnterpriseResolvers.codeMonitorsResolver = codeMonitors
-		resolver.CodeMonitorsResolver = codeMonitors
-		schemas = append(schemas, codeMonitorsSchema)
-		// Register NodeByID handlers.
-		for kind, res := range codeMonitors.NodeResolvers() {
-			resolver.nodeByIDFns[kind] = res
-		}
-	}
-
-	if gitHubApps := optional.GitHubAppsResolver; gitHubApps != nil {
-		EnterpriseResolvers.gitHubAppsResolver = gitHubApps
-		resolver.GitHubAppsResolver = gitHubApps
-		schemas = append(schemas, gitHubAppsSchema)
-		for kind, res := range gitHubApps.NodeResolvers() {
-			resolver.nodeByIDFns[kind] = res
-		}
-	}
-
-	if license := optional.LicenseResolver; license != nil {
-		EnterpriseResolvers.licenseResolver = license
-		resolver.LicenseResolver = license
-		schemas = append(schemas, licenseSchema)
-		// No NodeByID handlers currently.
-	}
-
-	if dotcom := optional.DotcomRootResolver; dotcom != nil {
-		EnterpriseResolvers.dotcomResolver = dotcom
-		resolver.DotcomRootResolver = dotcom
-		schemas = append(schemas, dotcomSchema)
-		// Register NodeByID handlers.
-		for kind, res := range dotcom.NodeResolvers() {
-			resolver.nodeByIDFns[kind] = res
-		}
-	}
-
-	if searchContexts := optional.SearchContextsResolver; searchContexts != nil {
-		EnterpriseResolvers.searchContextsResolver = searchContexts
-		resolver.SearchContextsResolver = searchContexts
-		schemas = append(schemas, searchContextsSchema)
-		// Register NodeByID handlers.
-		for kind, res := range searchContexts.NodeResolvers() {
-			resolver.nodeByIDFns[kind] = res
-		}
-	}
-
-	if notebooks := optional.NotebooksResolver; notebooks != nil {
-		EnterpriseResolvers.notebooksResolver = notebooks
-		resolver.NotebooksResolver = notebooks
-		schemas = append(schemas, notebooksSchema)
-		// Register NodeByID handlers.
-		for kind, res := range notebooks.NodeResolvers() {
-			resolver.nodeByIDFns[kind] = res
-		}
-	}
-
-	if compute := optional.ComputeResolver; compute != nil {
-		EnterpriseResolvers.computeResolver = compute
-		resolver.ComputeResolver = compute
-		schemas = append(schemas, computeSchema)
-	}
-
-	if insightsAggregation := optional.InsightsAggregationResolver; insightsAggregation != nil {
-		EnterpriseResolvers.insightsAggregationResolver = insightsAggregation
-		resolver.InsightsAggregationResolver = insightsAggregation
-		schemas = append(schemas, insightsAggregationsSchema)
-	}
-
-	if webhooksResolver := optional.WebhooksResolver; webhooksResolver != nil {
-		EnterpriseResolvers.webhooksResolver = webhooksResolver
-		resolver.WebhooksResolver = webhooksResolver
-		// Register NodeByID handlers.
-		for kind, res := range webhooksResolver.NodeResolvers() {
-			resolver.nodeByIDFns[kind] = res
-		}
-	}
-
-	if embeddingsResolver := optional.EmbeddingsResolver; embeddingsResolver != nil {
-		EnterpriseResolvers.embeddingsResolver = embeddingsResolver
-		resolver.EmbeddingsResolver = embeddingsResolver
-		schemas = append(schemas, embeddingsSchema)
-	}
-
-	if contextResolver := optional.CodyContextResolver; contextResolver != nil {
-		EnterpriseResolvers.contextResolver = contextResolver
-		resolver.CodyContextResolver = contextResolver
-		schemas = append(schemas, codyContextSchema)
-	}
-
-	if rbacResolver := optional.RBACResolver; rbacResolver != nil {
-		EnterpriseResolvers.rbacResolver = rbacResolver
-		resolver.RBACResolver = rbacResolver
-		schemas = append(schemas, rbacSchema)
-	}
-
-	if ownResolver := optional.OwnResolver; ownResolver != nil {
-		EnterpriseResolvers.ownResolver = ownResolver
-		resolver.OwnResolver = ownResolver
-		schemas = append(schemas, ownSchema)
-		// Register NodeByID handlers.
-		for kind, res := range ownResolver.NodeResolvers() {
-			resolver.nodeByIDFns[kind] = res
-		}
-	}
-
-	if completionsResolver := optional.CompletionsResolver; completionsResolver != nil {
-		EnterpriseResolvers.completionsResolver = completionsResolver
-		resolver.CompletionsResolver = completionsResolver
-		schemas = append(schemas, completionSchema)
-	}
-
-	if guardrailsResolver := optional.GuardrailsResolver; guardrailsResolver != nil {
-		EnterpriseResolvers.guardrailsResolver = guardrailsResolver
-		resolver.GuardrailsResolver = guardrailsResolver
-		schemas = append(schemas, guardrailsSchema)
-	}
-
-	if appResolver := optional.AppResolver; appResolver != nil {
-		// Not under enterpriseResolvers, as this is a OSS schema extension.
-		resolver.AppResolver = appResolver
-		schemas = append(schemas, appSchema)
-	}
+	// TODO(LIBRE): identify if we need to force-load any of these schemas, or if we can adjust the
+	//              call-sites to not use them.
+	//schemas = append(schemas, insightsSchema)
+	//schemas = append(schemas, authzSchema)
+	//schemas = append(schemas, codeMonitorsSchema)
+	//schemas = append(schemas, gitHubAppsSchema)
+	//schemas = append(schemas, licenseSchema)
+	//schemas = append(schemas, searchContextsSchema)
+	//schemas = append(schemas, notebooksSchema)
+	//schemas = append(schemas, computeSchema)
+	//schemas = append(schemas, insightsAggregationsSchema)
+	//schemas = append(schemas, embeddingsSchema)
+	//schemas = append(schemas, codyContextSchema)
+	//schemas = append(schemas, rbacSchema)
+	//schemas = append(schemas, ownSchema)
+	//schemas = append(schemas, completionSchema)
+	//schemas = append(schemas, guardrailsSchema)
+	//schemas = append(schemas, appSchema)
 
 	logger := log.Scoped("GraphQL", "general GraphQL logging")
 	opts := []graphql.SchemaOpt{
