@@ -10,3 +10,6 @@
 *.DS_Store
 stats.json
 *.hot-update.json
+oss/
+!oss/assets.go
+!oss/BUILD.bazel

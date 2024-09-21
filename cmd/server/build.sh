@@ -29,6 +29,11 @@ export CGO_ENABLED=0
 # Ensure Docker images are built with buildkit enabled
 export DOCKER_BUILDKIT=1
 
+# TODO(LIBRE): the bazel build would usually take care of this file-copy. If we don't use Bazel, a
+#              better place to put this would probably be in a `go-build.sh` file or something
+#              within `cmd/frontend/` which uses it. Alas, this works.
+cp -a ./ui/assets/img ./ui/assets/oss/
+
 # Additional images passed in here when this script is called externally by our
 # enterprise build scripts.
 additional_images=()
