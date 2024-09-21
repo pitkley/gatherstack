@@ -70,7 +70,6 @@ export interface GlobalNavbarProps
     isRepositoryRelatedPage?: boolean
     branding?: typeof window.context.branding
     showKeyboardShortcutsHelp: () => void
-    showFeedbackModal: () => void
 
     setFuzzyFinderIsVisible: React.Dispatch<SetStateAction<boolean>>
 
@@ -136,7 +135,6 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Globa
     codeMonitoringEnabled,
     notebooksEnabled,
     ownEnabled,
-    showFeedbackModal,
     historyStack,
     ...props
 }) => {
@@ -402,7 +400,6 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Globa
                                 authenticatedUser={props.authenticatedUser}
                                 isSourcegraphDotCom={isSourcegraphDotCom}
                                 isSourcegraphApp={isSourcegraphApp}
-                                showFeedbackModal={showFeedbackModal}
                             />
                         </NavAction>
                     )}

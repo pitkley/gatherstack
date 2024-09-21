@@ -8,7 +8,7 @@ import { Shortcut } from '@sourcegraph/shared/src/react-shortcuts'
 import { useExperimentalFeatures } from '@sourcegraph/shared/src/settings/settings'
 import { useTheme, Theme } from '@sourcegraph/shared/src/theme'
 import { lazyComponent } from '@sourcegraph/shared/src/util/lazyComponent'
-import { FeedbackPrompt, LoadingSpinner, useLocalStorage } from '@sourcegraph/wildcard'
+import { LoadingSpinner, useLocalStorage } from '@sourcegraph/wildcard'
 
 import { useHistoryStack } from '../../../app/useHistoryStack'
 import { communitySearchContextsRoutes } from '../../../communitySearchContexts/routes'
@@ -20,7 +20,6 @@ import { useScrollToLocationHash } from '../../../components/useScrollToLocation
 import { useUserHistory } from '../../../components/useUserHistory'
 import { useFeatureFlag } from '../../../featureFlags/useFeatureFlag'
 import { GlobalAlerts } from '../../../global/GlobalAlerts'
-import { useHandleSubmitFeedback } from '../../../hooks'
 import { LegacyLayoutRouteContext } from '../../../LegacyRouteContext'
 import { GlobalNavbar } from '../../../nav/GlobalNavbar'
 import { EnterprisePageRoutes, PageRoutes } from '../../../routes.constants'
@@ -101,17 +100,10 @@ export const Layout: React.FC<LegacyLayoutProps> = props => {
 
     const { theme } = useTheme()
     const [keyboardShortcutsHelpOpen, setKeyboardShortcutsHelpOpen] = useState(false)
-    const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
     const showHelpShortcut = useKeyboardShortcut('keyboardShortcutsHelp')
 
     const showKeyboardShortcutsHelp = useCallback(() => setKeyboardShortcutsHelpOpen(true), [])
     const hideKeyboardShortcutsHelp = useCallback(() => setKeyboardShortcutsHelpOpen(false), [])
-    const showFeedbackModal = useCallback(() => setFeedbackModalOpen(true), [])
-
-    const { handleSubmitFeedback } = useHandleSubmitFeedback({
-        routeMatch:
-            routeMatches && routeMatches.length > 0 ? routeMatches[routeMatches.length - 1].pathname : undefined,
-    })
 
     useLayoutEffect(() => {
         const isLightTheme = theme === Theme.Light
@@ -174,23 +166,6 @@ export const Layout: React.FC<LegacyLayoutProps> = props => {
             ))}
             <KeyboardShortcutsHelp isOpen={keyboardShortcutsHelpOpen} onDismiss={hideKeyboardShortcutsHelp} />
 
-            {feedbackModalOpen && (
-                <FeedbackPrompt
-                    onSubmit={handleSubmitFeedback}
-                    modal={true}
-                    openByDefault={true}
-                    authenticatedUser={
-                        props.authenticatedUser
-                            ? {
-                                  username: props.authenticatedUser.username || '',
-                                  email: props.authenticatedUser.emails.find(email => email.isPrimary)?.email || '',
-                              }
-                            : null
-                    }
-                    onClose={() => setFeedbackModalOpen(false)}
-                />
-            )}
-
             <GlobalAlerts authenticatedUser={props.authenticatedUser} isSourcegraphApp={props.isSourcegraphApp} />
             {!isSiteInit && !isSignInOrUp && (
                 <GlobalNavbar
@@ -207,7 +182,6 @@ export const Layout: React.FC<LegacyLayoutProps> = props => {
                     setFuzzyFinderIsVisible={setFuzzyFinderVisible}
                     isRepositoryRelatedPage={isRepositoryRelatedPage}
                     showKeyboardShortcutsHelp={showKeyboardShortcutsHelp}
-                    showFeedbackModal={showFeedbackModal}
                     historyStack={historyStack}
                 />
             )}

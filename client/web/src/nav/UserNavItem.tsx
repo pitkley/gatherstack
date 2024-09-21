@@ -46,7 +46,6 @@ export interface UserNavItemProps extends TelemetryProps {
     isSourcegraphDotCom: boolean
     isSourcegraphApp: boolean
     menuButtonRef?: React.Ref<HTMLButtonElement>
-    showFeedbackModal: () => void
     showKeyboardShortcutsHelp: () => void
 }
 
@@ -60,7 +59,6 @@ export const UserNavItem: FC<UserNavItemProps> = props => {
         isSourcegraphDotCom,
         isSourcegraphApp,
         menuButtonRef,
-        showFeedbackModal,
         showKeyboardShortcutsHelp,
         telemetryService,
     } = props
@@ -230,7 +228,6 @@ export const UserNavItem: FC<UserNavItemProps> = props => {
                                     <MenuLink as={Link} to="/help" target="_blank" rel="noopener">
                                         Help <Icon aria-hidden={true} svgPath={mdiOpenInNew} />
                                     </MenuLink>
-                                    <MenuItem onSelect={showFeedbackModal}>Feedback</MenuItem>
                                     <MenuItem onSelect={showKeyboardShortcutsHelp}>Keyboard shortcuts</MenuItem>
                                     {authenticatedUser.session?.canSignOut && (
                                         <MenuLink as={AnchorLink} to="/-/sign-out">

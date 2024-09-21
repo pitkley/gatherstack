@@ -62,7 +62,7 @@ export { Text, Code, Heading, Label, H1, H2, H3, H4, H5, H6 } from './Typography
 export { AnchorLink, RouterLink, setLinkComponent, Link, LinkOrSpan, createLinkUrl } from './Link'
 export { Markdown } from './Markdown'
 export { Modal } from './Modal'
-export { FeedbackBadge, FeedbackText, FeedbackPrompt } from './Feedback'
+export { FeedbackBadge, FeedbackText } from './Feedback'
 export {
     Popover,
     PopoverTrigger,
@@ -101,7 +101,6 @@ export {
  * `export type` is required to avoid Webpack warnings.
  */
 export type { ButtonGroupProps } from './Button'
-export type { FeedbackPromptSubmitEventHandler } from './Feedback'
 export type { AlertProps, AlertLinkProps } from './Alert'
 export type { ButtonProps } from './Button'
 export type { ButtonLinkProps } from './ButtonLink'

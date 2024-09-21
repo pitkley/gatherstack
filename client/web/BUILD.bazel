@@ -1089,7 +1089,6 @@ ts_project(
         "src/global/Notices.tsx",
         "src/globals.d.ts",
         "src/hooks/index.ts",
-        "src/hooks/useHandleSubmitFeedback.ts",
         "src/hooks/useRoutesMatch.ts",
         "src/hooks/useScrollManager/index.ts",
         "src/hooks/useScrollManager/mutationObserverWithTimeout.ts",
