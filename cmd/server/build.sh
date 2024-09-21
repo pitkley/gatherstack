@@ -26,6 +26,9 @@ export GOARCH=amd64
 export GOOS=linux
 export CGO_ENABLED=0
 
+# Ensure Docker images are built with buildkit enabled
+export DOCKER_BUILDKIT=1
+
 # Additional images passed in here when this script is called externally by our
 # enterprise build scripts.
 additional_images=()
