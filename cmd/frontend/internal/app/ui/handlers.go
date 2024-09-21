@@ -22,8 +22,6 @@ import (
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/backend"
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/envvar"
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/globals"
-	"github.com/sourcegraph/sourcegraph/cmd/frontend/hubspot"
-	"github.com/sourcegraph/sourcegraph/cmd/frontend/hubspot/hubspotutil"
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/internal/app/assetsutil"
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/internal/app/jscontext"
 	"github.com/sourcegraph/sourcegraph/cmd/frontend/internal/handlerutil"
@@ -33,7 +31,6 @@ import (
 	"github.com/sourcegraph/sourcegraph/internal/authz"
 	"github.com/sourcegraph/sourcegraph/internal/conf"
 	"github.com/sourcegraph/sourcegraph/internal/conf/deploy"
-	"github.com/sourcegraph/sourcegraph/internal/cookie"
 	"github.com/sourcegraph/sourcegraph/internal/database"
 	"github.com/sourcegraph/sourcegraph/internal/env"
 	"github.com/sourcegraph/sourcegraph/internal/errcode"
@@ -557,29 +554,6 @@ func servePingFromSelfHosted(w http.ResponseWriter, r *http.Request) error {
 		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
-	email := r.URL.Query().Get("email")
-	tosAccepted := r.URL.Query().Get("tos_accepted")
 
-	firstSourceURLCookie, err := r.Cookie("sourcegraphSourceUrl")
-	var firstSourceURL string
-	if err == nil && firstSourceURLCookie != nil {
-		firstSourceURL = firstSourceURLCookie.Value
-	}
-
-	lastSourceURLCookie, err := r.Cookie("sourcegraphRecentSourceUrl")
-	var lastSourceURL string
-	if err == nil && lastSourceURLCookie != nil {
-		lastSourceURL = lastSourceURLCookie.Value
-	}
-
-	anonymousUserId, _ := cookie.AnonymousUID(r)
-
-	hubspotutil.SyncUser(email, hubspotutil.SelfHostedSiteInitEventID, &hubspot.ContactProperties{
-		IsServerAdmin:   true,
-		AnonymousUserID: anonymousUserId,
-		FirstSourceURL:  firstSourceURL,
-		LastSourceURL:   lastSourceURL,
-		HasAgreedToToS:  tosAccepted == "true",
-	})
 	return nil
 }

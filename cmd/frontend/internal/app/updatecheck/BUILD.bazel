@@ -15,8 +15,6 @@ go_library(
     deps = [
         "//cmd/frontend/envvar",
         "//cmd/frontend/globals",
-        "//cmd/frontend/hubspot",
-        "//cmd/frontend/hubspot/hubspotutil",
         "//cmd/frontend/internal/siteid",
         "//internal/conf",
         "//internal/conf/deploy",

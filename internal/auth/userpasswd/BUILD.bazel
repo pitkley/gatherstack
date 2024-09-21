@@ -22,8 +22,6 @@ go_library(
     deps = [
         "//cmd/frontend/backend",
         "//cmd/frontend/globals",
-        "//cmd/frontend/hubspot",
-        "//cmd/frontend/hubspot/hubspotutil",
         "//internal/actor",
         "//internal/auth",
         "//internal/auth/providers",

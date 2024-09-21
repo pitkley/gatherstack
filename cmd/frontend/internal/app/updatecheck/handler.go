@@ -17,8 +17,6 @@ import (
 
 	"github.com/sourcegraph/log"
 
-	"github.com/sourcegraph/sourcegraph/cmd/frontend/hubspot"
-	"github.com/sourcegraph/sourcegraph/cmd/frontend/hubspot/hubspotutil"
 	"github.com/sourcegraph/sourcegraph/internal/conf"
 	"github.com/sourcegraph/sourcegraph/internal/conf/deploy"
 	"github.com/sourcegraph/sourcegraph/internal/env"
@@ -403,15 +401,6 @@ func logPing(logger log.Logger, r *http.Request, pr *pingRequest, hasUpdate bool
 			logger.Scoped("pubsub.Publish", "").
 				Warn("failed to Publish", log.String("message", string(message)), log.Error(err))
 		}
-	}
-
-	// Sync the initial administrator email in HubSpot.
-	if pr.InitialAdminEmail != "" && strings.Contains(pr.InitialAdminEmail, "@") {
-		// Hubspot requires the timestamp to be rounded to the nearest day at midnight.
-		now := time.Now().UTC()
-		rounded := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
-		millis := rounded.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))
-		go hubspotutil.SyncUser(pr.InitialAdminEmail, "", &hubspot.ContactProperties{IsServerAdmin: true, LatestPing: millis, HasAgreedToToS: pr.TosAccepted})
 	}
 }
 
