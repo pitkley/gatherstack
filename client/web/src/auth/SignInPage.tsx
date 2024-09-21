@@ -159,25 +159,6 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
             {context.allowSignup ? (
                 <Text>
                     New to Sourcegraph? <Link to="/sign-up">Sign up.</Link>{' '}
-                    {context.sourcegraphDotComMode && (
-                        <>
-                            To use Sourcegraph on private repositories,{' '}
-                            <Link
-                                to="https://about.sourcegraph.com/app"
-                                onClick={() => eventLogger.log('ClickedOnAppCTA', { location: 'SignInPage' })}
-                            >
-                                download Sourcegraph app
-                            </Link>{' '}
-                            or{' '}
-                            <Link
-                                to="https://sourcegraph.com/get-started?t=enterprise"
-                                onClick={() => eventLogger.log('ClickedOnEnterpriseCTA', { location: 'SignInPage' })}
-                            >
-                                get Sourcegraph Enterprise
-                            </Link>
-                            .
-                        </>
-                    )}
                 </Text>
             ) : isRequestAccessAllowed ? (
                 <Text className="text-muted">
@@ -194,7 +175,6 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
             <PageTitle title="Sign in" />
             <HeroPage
                 icon={SourcegraphIcon}
-                iconLinkTo={context.sourcegraphDotComMode ? '/search' : undefined}
                 iconClassName="bg-transparent"
                 lessPadding={true}
                 title="Sign in to Sourcegraph"

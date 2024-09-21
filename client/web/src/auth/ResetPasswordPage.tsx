@@ -303,7 +303,6 @@ export const ResetPasswordPage: React.FunctionComponent<ResetPasswordPageProps> 
             <PageTitle title="Reset your password" />
             <HeroPage
                 icon={SourcegraphIcon}
-                iconLinkTo={window.context.sourcegraphDotComMode ? '/search' : undefined}
                 iconClassName="bg-transparent"
                 title="Reset your password"
                 body={<div className={classNames('mt-4', signInSignUpCommonStyles.signinPageContainer)}>{body}</div>}

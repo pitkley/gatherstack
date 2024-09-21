@@ -170,7 +170,6 @@ ts_project(
         "src/app/tauriIcpUtils.ts",
         "src/app/useHistoryStack.tsx",
         "src/auth.ts",
-        "src/auth/CloudSignUpPage.tsx",
         "src/auth/OrDivider.tsx",
         "src/auth/RequestAccessPage.tsx",
         "src/auth/ResetPasswordPage.tsx",

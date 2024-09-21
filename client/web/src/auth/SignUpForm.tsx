@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
 
-import { mdiBitbucket, mdiGithub, mdiGitlab } from '@mdi/js'
 import classNames from 'classnames'
 import cookies from 'js-cookie'
 import { Observable, of } from 'rxjs'
@@ -13,14 +12,13 @@ import {
     ValidationOptions,
     deriveInputClassName,
 } from '@sourcegraph/shared/src/util/useInputValidation'
-import { Link, Icon, Label, Text, Button, AnchorLink, LoaderInput, ErrorAlert } from '@sourcegraph/wildcard'
+import { Link, Label, Text, LoaderInput, ErrorAlert } from '@sourcegraph/wildcard'
 
 import { LoaderButton } from '../components/LoaderButton'
-import { AuthProvider, SourcegraphContext } from '../jscontext'
+import { SourcegraphContext } from '../jscontext'
 import { ANONYMOUS_USER_ID_KEY, eventLogger, FIRST_SOURCE_URL_KEY, LAST_SOURCE_URL_KEY } from '../tracking/eventLogger'
 import { validatePassword, getPasswordRequirements } from '../util/security'
 
-import { OrDivider } from './OrDivider'
 import { PasswordInput, UsernameInput } from './SignInSignUpCommon'
 import { SignupEmailField } from './SignupEmailField'
 
@@ -122,17 +120,6 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
         [onSignUp, disabled, emailState, usernameState, passwordState]
     )
 
-    const externalAuthProviders = context.authProviders.filter(provider => !provider.isBuiltin)
-
-    const onClickExternalAuthSignup = useCallback(
-        (type: AuthProvider['serviceType']) => () => {
-            // TODO: Log events with keepalive=true to ensure they always outlive the webpage
-            // https://github.com/sourcegraph/sourcegraph/issues/19174
-            eventLogger.log('SignupInitiated', { type }, { type })
-        },
-        []
-    )
-
     return (
         <>
             {error && <ErrorAlert className="mt-4 mb-0" error={error} />}
@@ -144,7 +131,7 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
                     'test-signup-form',
                     !experimental && 'rounded p-4',
                     'text-left',
-                    !experimental && (context.sourcegraphDotComMode || error) ? 'mt-3' : 'mt-4',
+                    !experimental && error ? 'mt-3' : 'mt-4',
                     className
                 )}
                 onSubmit={handleSubmit}
@@ -234,33 +221,6 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
                         display="block"
                     />
                 </div>
-                {context.sourcegraphDotComMode && (
-                    <>
-                        {externalAuthProviders.length > 0 && <OrDivider className="my-4" />}
-                        {externalAuthProviders.map((provider, index) => (
-                            // Use index as key because display name may not be unique. This is OK
-                            // here because this list will not be updated during this component's lifetime.
-                            <div className="mb-2" key={index}>
-                                <Button
-                                    to={provider.authenticationURL}
-                                    display="block"
-                                    onClick={onClickExternalAuthSignup(provider.serviceType)}
-                                    variant="secondary"
-                                    as={AnchorLink}
-                                >
-                                    {provider.serviceType === 'github' ? (
-                                        <Icon aria-hidden={true} svgPath={mdiGithub} />
-                                    ) : provider.serviceType === 'gitlab' ? (
-                                        <Icon aria-hidden={true} svgPath={mdiGitlab} />
-                                    ) : provider.serviceType === 'bitbucketCloud' ? (
-                                        <Icon aria-hidden={true} svPath={mdiBitbucket} />
-                                    ) : null}{' '}
-                                    Continue with {provider.displayName}
-                                </Button>
-                            </div>
-                        ))}
-                    </>
-                )}
 
                 {!experimental && (
                     <Text className="mt-3 mb-0">

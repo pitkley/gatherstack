@@ -93,14 +93,9 @@ export const UnlockAccountPage: React.FunctionComponent<React.PropsWithChildren<
             <PageTitle title="Unlock account" />
             <HeroPage
                 icon={SourcegraphIcon}
-                iconLinkTo={props.context.sourcegraphDotComMode ? '/search' : undefined}
                 iconClassName="bg-transparent"
                 lessPadding={true}
-                title={
-                    props.context.sourcegraphDotComMode
-                        ? 'Unlock your Sourcegraph.com account'
-                        : 'Unlock your Sourcegraph Server account'
-                }
+                title='Unlock your Sourcegraph Server account'
                 body={body}
             />
         </div>
