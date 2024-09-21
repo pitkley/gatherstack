@@ -1,71 +1,94 @@
-<p align="center">
-<a href="https://about.sourcegraph.com/" target="_blank">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://p21.p4.n0.cdn.getcloudapp.com/items/6qub2y6g/8c25cf68-2715-4f0e-9de6-26292fad604f.svg" width="50%">
-  <img src="https://p21.p4.n0.cdn.getcloudapp.com/items/12u7NWXL/5e21725d-6e84-4ccd-8300-27bf9a050416.svg" width="50%">
-</picture></a>
-</p>
+# Gatherstack &ndash; a libre, OSS fork of [Sourcegraph](https://sourcegraph.com).
 
-<p align="center">
-    <a href="https://docs.sourcegraph.com">Docs</a> •
-    <a href="https://sourcegraph.com/github.com/sourcegraph/sourcegraph/-/blob/CONTRIBUTING.md">Contributing</a> •
-    <a href="https://twitter.com/sourcegraph">Twitter</a> •
-    <a href="https://discord.gg/s2qDtYGnAE">Discord</a>
-    <br /><br />
-    <a href="https://buildkite.com/sourcegraph/sourcegraph">
-        <img src="https://badge.buildkite.com/00bbe6fa9986c78b8e8591cffeb0b0f2e8c4bb610d7e339ff6.svg?branch=main" alt="Build status" />
-    </a>
-    <a href="https://api.securityscorecards.dev/projects/github.com/sourcegraph/sourcegraph">
-        <img src="https://img.shields.io/ossf-scorecard/github.com/sourcegraph/sourcegraph?label=openssf%20scorecard" alt="Scorecard" />
-    </a>
-    <a href="https://github.com/sourcegraph/sourcegraph/releases/">
-        <img src="https://img.shields.io/github/release/sourcegraph/Sourcegraph.svg" alt="Latest release" />
-    </a>
-    <a href="https://srcgr.ph/discord">
-        <img src="https://img.shields.io/discord/969688426372825169?color=5765F2" alt="Discord" />
-    </a>
-    <a href="https://github.com/sourcegraph/sourcegraph/contributors/">
-        <img src="https://img.shields.io/github/contributors/sourcegraph/Sourcegraph.svg?color=000000" alt="Contributors" />
-    </a>
-</p>
-<br />
+Search all of your repositories across all branches and all code hosts.
 
-**Sourcegraph makes it easy to read, write, and fix code—even in big, complex codebases.**
+This is based on the last OSS, Apache 2.0 commit provided by Sourcegraph Inc., which you can find upstream here: <https://github.com/sourcegraph/sourcegraph-public-snapshot/commit/1cd36d2dbbd2a9ab638cc437d208d2717eaefb0b>.
 
-- **Code search:** Search all of your repositories across all branches and all code hosts.
-- **Code intelligence:** Navigate code, find references, see code owners, trace history, and more.
-- **Fix and refactor:** Roll out large-scale changes to many repositories at once and track big migrations.
+## Learn more about how to use Gatherstack
 
-## Getting started
+You can refer to Sourcegraph's legacy documentation for Sourcegraph 5.1: <https://docs-legacy.sourcegraph.com/@5.1>.
+The various 
 
-- [**Download Sourcegraph**](https://about.sourcegraph.com/app) for macOS and Linux
-- [Use Sourcegraph on the cloud or self-hosted](https://docs.sourcegraph.com/)
-- [Sourcegraph.com public code search](https://sourcegraph.com/search)
+## How to build
 
-<br><br>
+The following steps have been verified to work on Debian 12 (amd64).
+They might work on other distributions and architectures as well, although they have not yet been tested.
 
-<img src="https://about.sourcegraph.com/home/banner.png" />
+The following commands need to be run as root (although feel free to adapt if you want to run them as a different user).
 
-## Development
+```shell
+# Install apt dependencies
+apt install -y \
+  apparmor \
+  apparmor-utils \
+  build-essential \
+  docker.io \
+  git \
+  parallel \
+  ;
 
-Refer to the [Developing Sourcegraph guide](https://docs.sourcegraph.com/dev) to get started.
+# Install specific node version
+wget https://nodejs.org/dist/v16.18.1/node-v16.18.1-linux-x64.tar.xz
+tar -xJf node-v16.18.1-linux-x64.tar.xz
+mv node-v16.18.1-linux-x64 /usr/local/node-v16.18.1
+ln -s /usr/local/node-v16.18.1/bin/node /usr/bin/node
+ln -s /usr/local/node-v16.18.1/bin/npm /usr/bin/npm
 
-### Documentation
+# Install specific golang version
+wget https://golang.org/dl/go1.19.8.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.19.8.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
 
-The `doc` directory has additional documentation for developing and understanding Sourcegraph:
+# Install required pnpm version
+curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=8.3.0 sh -
 
-- [Project FAQ](./doc/admin/faq.md)
-- [Architecture](./doc/dev/background-information/architecture/index.md): high-level architecture
-- [Database setup](./doc/dev/background-information/postgresql.md): database best practices
-- [Go style guide](./doc/dev/background-information/languages/go.md)
-- [Documentation style guide](https://handbook.sourcegraph.com/engineering/product_documentation)
-- [GraphQL API](./doc/api/graphql/index.md): useful tips when modifying the GraphQL API
-- [Contributing](./CONTRIBUTING.md)
+# Check out the source code
+git clone https://github.com/pitkley/gatherstack
+
+# Build gatherstack
+cd gatherstack/cmd/server/
+./pre-build.sh
+env IMAGE=pitkley/gatherstack:self-built VERSION=5.1.0 ./build.sh
+```
+
+This builds a single Docker image for Gatherstack.
+The most basic way to run Gatherstack is like this:
+
+```shell
+docker container run \
+  --name gatherstack \
+  --detach \
+  -p 7080:7080 \
+  --volume ./gs-config:/etc/sourcegraph \
+  --volume ./gs-data:/var/opt/sourcegraph \
+  pitkley/gatherstack:self-built
+```
+
+After this you can access Gatherstack at <http://localhost:7080>.
+
+## Project goal and naming
+
+This project's goal is to preserve the last Apache 2.0 licensed version of Sourcegraph, and make building and running easy, accessible and self-sustained.
+
+To reduce any confusion with Sourcegraph, this project is named "Gatherstack", although there is no intention to remove every occurrence of "Sourcegraph" from the codebase just for the sake of it.
+Instead, all user-facing interfaces should show "Gatherstack", to avoid the users accidentally reaching out to Sourcegraph with issues that Sourcegraph could not support with.
+
+It currently is not a goal to extend Gatherstack with new features.
+
+## Contributing
+
+Currently, no contributions to this repository are accepted.
+The risk is that code contributed referenced Sourcegraph's non-OSS enterprise code, making the contribution incompatible with the Apache 2.0 license.
+
+## Affiliation
+
+This project has no affiliation with Sourcegraph Inc. or any of its affiliates.
+"Sourcegraph" is a trademark of Sourcegraph Inc.
 
 ## License
 
-This repository contains both OSS-licensed and non-OSS-licensed files. We maintain one repository rather than two separate repositories mainly for development convenience.
+As of commit `5e0b4eb503df02321c1577f423fa830b4b28eed5` all code in this repository is licensed under the Apache 2.0 license, see [LICENSE](LICENSE) or <https://www.apache.org/licenses/LICENSE-2.0>.
 
-All files in the `enterprise` and `client/web/src/enterprise` fall under [LICENSE.enterprise](LICENSE.enterprise).
+Commits including and prior to commit `1cd36d2dbbd2a9ab638cc437d208d2717eaefb0b` can contain code under certain paths that is licensed under the Sourcegraph "Enterprise License", the details of which you can find in the `README.md` and in the `LICENSE.enterprise` file in the respective commits.
 
-The remaining files fall under the [Apache 2 license](LICENSE.apache). Sourcegraph OSS is built only from the Apache-licensed files in this repository.
+All code up to and including commit `1cd36d2dbbd2a9ab638cc437d208d2717eaefb0b` is copyright 2018-2023 Sourcegraph Inc.
