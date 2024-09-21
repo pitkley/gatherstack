@@ -1,12 +1,11 @@
 import React from 'react'
 
-import { mdiMagnify, mdiSitemap, mdiBookOutline, mdiPuzzleOutline, mdiPoll } from '@mdi/js'
+import { mdiMagnify, mdiSitemap, mdiPuzzleOutline } from '@mdi/js'
 import classNames from 'classnames'
 
 import { useQuery } from '@sourcegraph/http-client'
-import { H2, H3, Text, LoadingSpinner, Link, Icon, Tooltip } from '@sourcegraph/wildcard'
+import { H2, H3, Text, LoadingSpinner, Link, Icon } from '@sourcegraph/wildcard'
 
-import { BatchChangesIconNav } from '../../../batches/icons'
 import {
     OverviewDevTimeSavedResult,
     OverviewDevTimeSavedVariables,
@@ -213,38 +212,6 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                     </tr>
                     <tr>
                         <td className="text-left">
-                            <Link to="/site-admin/analytics/batch-changes">
-                                <Text as="span" className="d-flex align-items-center">
-                                    <BatchChangesIconNav className="mr-1" />
-                                    Batch Changes
-                                </Text>
-                            </Link>
-                        </td>
-                        <Text as="td" weight="bold">
-                            {formatNumber(totalBatchChangesEvents)}
-                        </Text>
-                        <Text as="td" weight="bold">
-                            {formatNumber(totalBatchChangesHoursSaved)}
-                        </Text>
-                    </tr>
-                    <tr>
-                        <td className="text-left">
-                            <Link to="/site-admin/analytics/notebooks">
-                                <Text as="span" className="d-flex align-items-center">
-                                    <Icon svgPath={mdiBookOutline} size="md" aria-label="Notebooks" className="mr-1" />
-                                    Notebooks
-                                </Text>
-                            </Link>
-                        </td>
-                        <Text as="td" weight="bold">
-                            {formatNumber(totalNotebooksEvents)}
-                        </Text>
-                        <Text as="td" weight="bold">
-                            {formatNumber(totalNotebooksHoursSaved)}
-                        </Text>
-                    </tr>
-                    <tr>
-                        <td className="text-left">
                             <Link to="/site-admin/analytics/extensions">
                                 <Text as="span" className="d-flex align-items-center">
                                     <Icon
@@ -263,26 +230,6 @@ export const DevTimeSaved: React.FunctionComponent<DevTimeSavedProps> = ({ showA
                         <Text as="td" weight="bold">
                             {formatNumber(totalExtensionsHoursSaved)}
                         </Text>
-                    </tr>
-                    <tr>
-                        <td className="text-left">
-                            <Link to="/site-admin/analytics/code-insights">
-                                <Text as="span" className="d-flex align-items-center">
-                                    <Icon svgPath={mdiPoll} size="md" aria-label="Extensions" className="mr-1" />
-                                    Code insights
-                                </Text>
-                            </Link>
-                        </td>
-                        <Tooltip content="Coming soon">
-                            <Text className="cursor-pointer" as="td" weight="bold">
-                                ...*
-                            </Text>
-                        </Tooltip>
-                        <Tooltip content="Coming soon">
-                            <Text className="cursor-pointer" as="td" weight="bold">
-                                ...*
-                            </Text>
-                        </Tooltip>
                     </tr>
                 </tbody>
             </table>

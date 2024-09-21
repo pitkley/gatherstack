@@ -35,18 +35,6 @@ export const analyticsGroup: SiteAdminSideBarGroup = {
             to: '/site-admin/analytics/users',
         },
         {
-            label: 'Insights',
-            to: '/site-admin/analytics/code-insights',
-        },
-        {
-            label: 'Batch changes',
-            to: '/site-admin/analytics/batch-changes',
-        },
-        {
-            label: 'Notebooks',
-            to: '/site-admin/analytics/notebooks',
-        },
-        {
             label: 'Extensions',
             to: '/site-admin/analytics/extensions',
         },
