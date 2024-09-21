@@ -2,14 +2,12 @@ import React, { useEffect, useMemo } from 'react'
 
 import { mdiAccount, mdiSourceRepository } from '@mdi/js'
 import classNames from 'classnames'
-import format from 'date-fns/format'
 
 import { useQuery } from '@sourcegraph/http-client'
-import { AnchorLink, Card, H2, Link, LoadingSpinner, Text } from '@sourcegraph/wildcard'
+import { Card, H2, Link, LoadingSpinner, Text } from '@sourcegraph/wildcard'
 
 import { ErrorBoundary } from '../../../components/ErrorBoundary'
 import { OverviewStatisticsResult, OverviewStatisticsVariables } from '../../../graphql-operations'
-import { formatRelativeExpirationDate, isProductLicenseExpired } from '../../../productSubscription/helpers'
 import { eventLogger } from '../../../tracking/eventLogger'
 import { checkRequestAccessAllowed } from '../../../util/checkRequestAccessAllowed'
 import { AnalyticsPageTitle } from '../components/AnalyticsPageTitle'
@@ -67,9 +65,6 @@ export const AnalyticsOverviewPage: React.FunctionComponent<Props> = () => {
         return <LoadingSpinner />
     }
 
-    const { productSubscription } = data.site
-    const licenseExpiresAt = productSubscription.license ? new Date(productSubscription.license.expiresAt) : null
-
     const changelogUrl = getChangelogUrl(data.site.productVersion)
     return (
         <>
@@ -93,38 +88,6 @@ export const AnalyticsOverviewPage: React.FunctionComponent<Props> = () => {
                                     <span className={styles.purple}>{data.site.productVersion}</span>
                                 )}
                             </Text>
-                            {productSubscription.license && licenseExpiresAt ? (
-                                <>
-                                    {data.site.updateCheck.updateVersionAvailable || error ? (
-                                        <AnchorLink
-                                            to="/help/admin/updates"
-                                            target="_blank"
-                                            rel="noopener"
-                                            className="ml-1"
-                                        >
-                                            Upgrade
-                                        </AnchorLink>
-                                    ) : null}
-                                    <Text className="text-muted mx-2">|</Text>
-                                    <Text className="text-muted">
-                                        License
-                                        {isProductLicenseExpired(licenseExpiresAt) ? ' expired on ' : ' valid until '}
-                                        <span title={format(licenseExpiresAt, 'PPpp')}>
-                                            {format(licenseExpiresAt, 'yyyy-MM-dd')}
-                                        </span>{' '}
-                                        ({formatRelativeExpirationDate(licenseExpiresAt)})
-                                    </Text>
-                                </>
-                            ) : (
-                                <AnchorLink
-                                    to="http://about.sourcegraph.com/contact/sales"
-                                    target="_blank"
-                                    rel="noopener"
-                                    className="ml-1"
-                                >
-                                    Get license
-                                </AnchorLink>
-                            )}
                         </div>
                     </div>
                 </div>
