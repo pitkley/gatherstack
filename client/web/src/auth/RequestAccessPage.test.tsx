@@ -48,7 +48,7 @@ describe('RequestAccessPage', () => {
         const { locationRef, getByTestId, asFragment } = renderPage()
 
         expect(locationRef?.current?.pathname).toBe('/request-access')
-        expect(document.title).toBe('Request access - Sourcegraph')
+        expect(document.title).toBe('Request access - Gatherstack')
         expect(getByTestId('request-access-form')).toBeInTheDocument()
         expect(asFragment()).toMatchSnapshot()
     })

@@ -158,7 +158,7 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
             </div>
             {context.allowSignup ? (
                 <Text>
-                    New to Sourcegraph? <Link to="/sign-up">Sign up.</Link>{' '}
+                    New to Gatherstack? <Link to="/sign-up">Sign up.</Link>{' '}
                 </Text>
             ) : isRequestAccessAllowed ? (
                 <Text className="text-muted">
@@ -177,7 +177,7 @@ export const SignInPage: React.FunctionComponent<React.PropsWithChildren<SignInP
                 icon={SourcegraphIcon}
                 iconClassName="bg-transparent"
                 lessPadding={true}
-                title="Sign in to Sourcegraph"
+                title="Sign in to Gatherstack"
                 body={body}
             />
         </div>

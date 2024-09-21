@@ -47,9 +47,7 @@ export function createPlatformContext(): PlatformContext {
                 throw new Error(
                     `Unable to ${editDescription} because you are not signed in.` +
                         '\n\n' +
-                        `[**Sign into Sourcegraph${
-                            url.hostname === 'sourcegraph.com' ? '' : ` on ${url.host}`
-                        }**](${`${url.href.replace(/\/$/, '')}/sign-in`})`
+                        `[**Sign into Gatherstack on ${url.host}**](${`${url.href.replace(/\/$/, '')}/sign-in`})`
                 )
             }
 

@@ -106,7 +106,7 @@ export const SignUpPage: React.FunctionComponent<React.PropsWithChildren<SignUpP
             <HeroPage
                 icon={SourcegraphIcon}
                 iconClassName="bg-transparent"
-                title='Sign up for Sourcegraph Server'
+                title='Sign up for Gatherstack'
                 lessPadding={true}
                 body={
                     <div className={classNames('pb-5', signInSignUpCommonStyles.signupPageContainer)}>

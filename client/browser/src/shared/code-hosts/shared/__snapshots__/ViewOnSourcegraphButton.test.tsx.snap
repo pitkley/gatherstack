@@ -3,12 +3,12 @@
 exports[`<ViewOnSourcegraphButton /> existence could not be determined  because of an authentication failure minimalUI = false renders a sign in button if showSignInButton = true 1`] = `
 <DocumentFragment>
   <a
-    aria-label="Sign into Sourcegraph to get hover tooltips, go to definition and more"
+    aria-label="Sign into Gatherstack to get hover tooltips, go to definition and more"
     class="open-on-sourcegraph test"
     href="https://test.com/sign-in?close=true&utm_source=chrome-extension&utm_campaign=sign-in-button"
     rel="noopener noreferrer"
     target="_blank"
-    title="Sign into Sourcegraph to get hover tooltips, go to definition and more"
+    title="Sign into Gatherstack to get hover tooltips, go to definition and more"
   >
     <svg
       fill="none"
@@ -28,7 +28,7 @@ exports[`<ViewOnSourcegraphButton /> existence could not be determined  because 
         fill="#00CBEC"
       />
     </svg>
-     Sign in to Sourcegraph
+     Sign in to Gatherstack
   </a>
 </DocumentFragment>
 `;
@@ -36,12 +36,12 @@ exports[`<ViewOnSourcegraphButton /> existence could not be determined  because 
 exports[`<ViewOnSourcegraphButton /> existence could not be determined  because of an authentication failure minimalUI = true renders a sign in button if showSignInButton = true 1`] = `
 <DocumentFragment>
   <a
-    aria-label="Sign into Sourcegraph to get hover tooltips, go to definition and more"
+    aria-label="Sign into Gatherstack to get hover tooltips, go to definition and more"
     class="open-on-sourcegraph test"
     href="https://test.com/sign-in?close=true&utm_source=chrome-extension&utm_campaign=sign-in-button"
     rel="noopener noreferrer"
     target="_blank"
-    title="Sign into Sourcegraph to get hover tooltips, go to definition and more"
+    title="Sign into Gatherstack to get hover tooltips, go to definition and more"
   >
     <svg
       fill="none"
@@ -61,7 +61,7 @@ exports[`<ViewOnSourcegraphButton /> existence could not be determined  because 
         fill="#00CBEC"
       />
     </svg>
-     Sign in to Sourcegraph
+     Sign in to Gatherstack
   </a>
 </DocumentFragment>
 `;

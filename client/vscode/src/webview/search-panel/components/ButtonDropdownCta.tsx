@@ -91,7 +91,7 @@ export const ButtonDropdownCta: React.FunctionComponent<React.PropsWithChildren<
                     </div>
                 </div>
                 <VSCodeButton type="button" onClick={onClick} autofocus={true}>
-                    Sign up for Sourcegraph
+                    Sign up for Gatherstack
                 </VSCodeButton>
             </PopoverContent>
         </Popover>

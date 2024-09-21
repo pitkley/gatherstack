@@ -221,22 +221,6 @@ export const SignUpForm: React.FunctionComponent<React.PropsWithChildren<SignUpF
                         display="block"
                     />
                 </div>
-
-                {!experimental && (
-                    <Text className="mt-3 mb-0">
-                        <small className="form-text text-muted">
-                            By signing up, you agree to our{' '}
-                            <Link to="https://about.sourcegraph.com/terms" target="_blank" rel="noopener">
-                                Terms of Service
-                            </Link>{' '}
-                            and{' '}
-                            <Link to="https://about.sourcegraph.com/privacy" target="_blank" rel="noopener">
-                                Privacy Policy
-                            </Link>
-                            .
-                        </small>
-                    </Text>
-                )}
             </form>
         </>
     )

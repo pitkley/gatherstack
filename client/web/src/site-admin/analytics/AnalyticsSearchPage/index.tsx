@@ -146,7 +146,7 @@ export const AnalyticsSearchPage: React.FC = () => {
                     label: 'Complex searches',
                     minPerItem: 120,
                     description:
-                        'Without Sourcegraph, these searches would require complex scripting. They often answer specific and valuable questions such as finding occurrences of Log4j at a specific version globally.',
+                        'Without Gatherstack, these searches would require complex scripting. They often answer specific and valuable questions such as finding occurrences of Log4j at a specific version globally.',
                     percentage: 3,
                     value: totalCount,
                 },
@@ -154,7 +154,7 @@ export const AnalyticsSearchPage: React.FC = () => {
                     label: 'Global searches',
                     minPerItem: 5,
                     description:
-                        "Searches that leverage Sourcegraph's ability to quickly and confidently query all of your company's code across code hosts, without locally cloning repositories or complex scripting.",
+                        "Searches that leverage Gatherstack's ability to quickly and confidently query all of your company's code across code hosts, without locally cloning repositories or complex scripting.",
                     percentage: 22,
                     value: totalCount,
                 },
@@ -162,7 +162,7 @@ export const AnalyticsSearchPage: React.FC = () => {
                     label: 'Core workflow',
                     minPerItem: 0.5,
                     description:
-                        'Common code search use cases are made more efficient through Sourcegraph’s advanced query language, syntax aware search patterns, and the ability to search code, diffs, and commit messages at any revision.',
+                        'Common code search use cases are made more efficient through Gatherstack advanced query language, syntax aware search patterns, and the ability to search code, diffs, and commit messages at any revision.',
                     percentage: 75,
                     value: totalCount,
                 },

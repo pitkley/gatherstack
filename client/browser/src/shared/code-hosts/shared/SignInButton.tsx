@@ -50,9 +50,9 @@ export const SignInButton: React.FunctionComponent<
     return (
         <SourcegraphIconButton
             href={signInUrl}
-            label="Sign in to Sourcegraph"
-            title="Sign into Sourcegraph to get hover tooltips, go to definition and more"
-            ariaLabel="Sign into Sourcegraph to get hover tooltips, go to definition and more"
+            label="Sign in to Gatherstack"
+            title="Sign into Gatherstack to get hover tooltips, go to definition and more"
+            ariaLabel="Sign into Gatherstack to get hover tooltips, go to definition and more"
             className={className}
             iconClassName={iconClassName}
             onClick={nextSignInClick}

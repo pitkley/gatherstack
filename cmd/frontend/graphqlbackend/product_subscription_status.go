@@ -5,7 +5,7 @@ import "context"
 // GetProductNameWithBrand is called to obtain the full product name (e.g., "Sourcegraph OSS") from a
 // product license.
 var GetProductNameWithBrand = func(hasLicense bool, licenseTags []string) string {
-	return "Sourcegraph OSS"
+	return "Gatherstack"
 }
 
 // ActualUserCount is called to obtain the actual maximum number of user accounts that have been active

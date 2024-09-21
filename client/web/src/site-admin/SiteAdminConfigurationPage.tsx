@@ -383,7 +383,7 @@ class SiteAdminConfigurationContent extends React.Component<Props, State> {
             alerts.push(
                 <Alert key="legacy-cluster-props-present" className={styles.alert} variant="info">
                     The configuration contains properties that are valid only in the
-                    <Code>values.yaml</Code> config file used for Kubernetes cluster deployments of Sourcegraph:{' '}
+                    <Code>values.yaml</Code> config file used for Kubernetes cluster deployments of Gatherstack:{' '}
                     <Code>{legacyKubernetesConfigProps.join(' ')}</Code>. You can disregard the validation warnings for
                     these properties reported by the configuration editor.
                 </Alert>
@@ -412,7 +412,7 @@ class SiteAdminConfigurationContent extends React.Component<Props, State> {
                     headingElement="h2"
                     description={
                         <>
-                            View and edit the Sourcegraph site configuration. See{' '}
+                            View and edit the Gatherstack site configuration. See{' '}
                             <Link to="/help/admin/config/site_config">documentation</Link> for more information.
                         </>
                     }

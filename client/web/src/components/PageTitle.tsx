@@ -9,10 +9,10 @@ interface PageTitleProps {
 
 const getBrandName = (): string => {
     if (!window.context) {
-        return 'Sourcegraph'
+        return 'Gatherstack'
     }
     const { branding } = window.context
-    return branding ? branding.brandName : 'Sourcegraph'
+    return branding ? branding.brandName : 'Gatherstack'
 }
 
 let titleSet = false
