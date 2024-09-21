@@ -954,7 +954,6 @@ Go,cloud.google.com/go/iam,v0.8.0,Apache 2.0,cloud.google.com/go/iam,Approved
 Go,cloud.google.com/go/kms,v1.6.0,Apache 2.0,cloud.google.com/go/kms,Approved
 Go,cloud.google.com/go/monitoring,v1.12.0,Apache 2.0,cloud.google.com/go/monitoring,Approved
 Go,cloud.google.com/go/profiler,v0.3.1,Apache 2.0,cloud.google.com/go/profiler,Approved
-Go,cloud.google.com/go/pubsub,v1.27.1,Apache 2.0,cloud.google.com/go/pubsub,Approved
 Go,cloud.google.com/go/secretmanager,v1.9.0,Apache 2.0,cloud.google.com/go/secretmanager,Approved
 Go,cloud.google.com/go/storage,v1.28.1,Apache 2.0,cloud.google.com/go/storage,Approved
 Go,cloud.google.com/go/trace,v1.8.0,Apache 2.0,cloud.google.com/go/trace,Approved

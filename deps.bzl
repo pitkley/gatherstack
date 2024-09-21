@@ -7781,24 +7781,6 @@ def go_dependencies():
     )
 
     go_repository(
-        name = "com_google_cloud_go_pubsub",
-        build_directives = [
-            "gazelle:resolve go google.golang.org/genproto/googleapis/api/annotations @go_googleapis//google/api:annotations_go_proto",  # keep
-        ],
-        build_file_proto_mode = "disable_global",
-        importpath = "cloud.google.com/go/pubsub",
-        sum = "h1:q+J/Nfr6Qx4RQeu3rJcnN48SNC0qzlYzSeqkPq93VHs=",
-        version = "v1.27.1",
-    )
-    go_repository(
-        name = "com_google_cloud_go_pubsublite",
-        build_file_proto_mode = "disable_global",
-        importpath = "cloud.google.com/go/pubsublite",
-        sum = "h1:iqrD8vp3giTb7hI1q4TQQGj77cj8zzgmMPsTZtLnprM=",
-        version = "v1.5.0",
-    )
-
-    go_repository(
         name = "com_google_cloud_go_recaptchaenterprise_v2",
         build_file_proto_mode = "disable_global",
         importpath = "cloud.google.com/go/recaptchaenterprise/v2",

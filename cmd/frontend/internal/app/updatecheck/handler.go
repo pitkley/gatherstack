@@ -19,15 +19,10 @@ import (
 
 	"github.com/sourcegraph/sourcegraph/internal/conf"
 	"github.com/sourcegraph/sourcegraph/internal/conf/deploy"
-	"github.com/sourcegraph/sourcegraph/internal/env"
 	"github.com/sourcegraph/sourcegraph/internal/lazyregexp"
-	"github.com/sourcegraph/sourcegraph/internal/pubsub"
 	"github.com/sourcegraph/sourcegraph/internal/types"
 	"github.com/sourcegraph/sourcegraph/lib/errors"
 )
-
-// pubSubPingsTopicID is the topic ID of the topic that forwards messages to Pings' pub/sub subscribers.
-var pubSubPingsTopicID = env.Get("PUBSUB_TOPIC_ID", "", "Pub/sub pings topic ID is the pub/sub topic id where pings are published.")
 
 var (
 	// latestReleaseDockerServerImageBuild is only used by sourcegraph.com to tell existing
@@ -106,7 +101,7 @@ func handler(logger log.Logger, w http.ResponseWriter, r *http.Request) {
 	hasUpdate, err := canUpdate(pr.ClientVersionString, pingResponse, pr.DeployType)
 
 	// Always log, even on malformed version strings
-	logPing(logger, r, pr, hasUpdate)
+	logPing(logger)
 
 	if err != nil {
 		http.Error(w, pr.ClientVersionString+" is a bad version string: "+err.Error(), http.StatusBadRequest)
@@ -374,7 +369,7 @@ type pingPayload struct {
 	RepoMetadataUsage             json.RawMessage `json:"repo_metadata_usage"`
 }
 
-func logPing(logger log.Logger, r *http.Request, pr *pingRequest, hasUpdate bool) {
+func logPing(logger log.Logger) {
 	logger = logger.Scoped("logPing", "logs ping requests")
 	defer func() {
 		if r := recover(); r != nil {
@@ -382,26 +377,6 @@ func logPing(logger log.Logger, r *http.Request, pr *pingRequest, hasUpdate bool
 			errorCounter.Inc()
 		}
 	}()
-
-	var clientAddr string
-	if v := r.Header.Get("x-forwarded-for"); v != "" {
-		clientAddr = v
-	} else {
-		clientAddr = r.RemoteAddr
-	}
-
-	message, err := marshalPing(pr, hasUpdate, clientAddr, time.Now())
-	if err != nil {
-		errorCounter.Inc()
-		logger.Warn("failed to Marshal payload", log.Error(err))
-	} else if pubsub.Enabled() {
-		err := pubsub.Publish(pubSubPingsTopicID, string(message))
-		if err != nil {
-			errorCounter.Inc()
-			logger.Scoped("pubsub.Publish", "").
-				Warn("failed to Publish", log.String("message", string(message)), log.Error(err))
-		}
-	}
 }
 
 func marshalPing(pr *pingRequest, hasUpdate bool, clientAddr string, now time.Time) ([]byte, error) {

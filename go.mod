@@ -65,7 +65,6 @@ require (
 	cloud.google.com/go/kms v1.6.0
 	cloud.google.com/go/monitoring v1.12.0
 	cloud.google.com/go/profiler v0.3.1
-	cloud.google.com/go/pubsub v1.27.1
 	cloud.google.com/go/secretmanager v1.9.0
 	cloud.google.com/go/storage v1.28.1
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.12.0
