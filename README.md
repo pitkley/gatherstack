@@ -16,12 +16,38 @@ This is based on the last OSS, Apache 2.0 commit provided by Sourcegraph Inc., w
 You can refer to Sourcegraph's legacy documentation for Sourcegraph 5.1: <https://docs-legacy.sourcegraph.com/@5.1>.
 The various 
 
+## How to run
+
+You can use the pre-built Docker image from this repository:
+
+```text
+docker pull ghcr.io/pitkley/gatherstack:latest
+```
+
+The most basic way to run Gatherstack is like this:
+
+```shell
+docker container run \
+  --name gatherstack \
+  --detach \
+  -p 7080:7080 \
+  --volume ./gatherstack/config:/etc/sourcegraph \
+  --volume ./gatherstack/data:/var/opt/sourcegraph \
+  ghcr.io/pitkley/gatherstack:latest
+```
+
+You can consult Sourcegraph's legacy documentation on ["Docker Single Container Deployment"](https://docs-legacy.sourcegraph.com/@5.1/admin/deploy/docker-single-container).
+
+After this you can access Gatherstack at <http://localhost:7080>.
+
 ## How to build
 
-The following steps have been verified to work on Debian 12 (amd64).
-They might work on other distributions and architectures as well, although they have not yet been tested.
+If you want to build the single-container Docker image yourself, you can follow the instructions below.
+The steps have been verified to work on Debian 12 (amd64) and Ubuntu 22.04 (amd64).
 
-The following commands need to be run as root (although feel free to adapt if you want to run them as a different user).
+The instructions might work on other distributions and architectures as well, although they have not yet been tested.
+
+The following commands need to be run as root, although you can adapt to run some of the commands as non-root by either using `sudo` or ensuring your user is allowed to interact with Docker.
 
 ```shell
 # Install apt dependencies
@@ -55,23 +81,10 @@ git clone https://github.com/pitkley/gatherstack
 # Build gatherstack
 cd gatherstack/cmd/server/
 ./pre-build.sh
-env IMAGE=pitkley/gatherstack:self-built VERSION=5.1.0 ./build.sh
+env IMAGE=gatherstack:self-built VERSION=5.1.0 ./build.sh
 ```
 
-This builds a single Docker image for Gatherstack.
-The most basic way to run Gatherstack is like this:
-
-```shell
-docker container run \
-  --name gatherstack \
-  --detach \
-  -p 7080:7080 \
-  --volume ./gs-config:/etc/sourcegraph \
-  --volume ./gs-data:/var/opt/sourcegraph \
-  pitkley/gatherstack:self-built
-```
-
-After this you can access Gatherstack at <http://localhost:7080>.
+This builds a single Docker image for Gatherstack, which will be available as `gatherstack:self-built`.
 
 ## Project goal and naming
 
